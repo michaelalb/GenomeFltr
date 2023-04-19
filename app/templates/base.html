@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title >Genomefltr</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link rel="icon" type="image/x-icon" href="{{url_for('static',filename='images/dna.svg')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}">
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
+  {% block head %}{% endblock %}  
+</head>
+
+<body class="font-sans h-full">
+  <div class='w-full h-screen bg-no-repeat bg-cover' 
+       style="background-image: url({{file_name}});">
+
+    {% block body %}{% endblock %}
+  </div>
+</body>
+  {% block scripts %}{% endblock %}
+</html>

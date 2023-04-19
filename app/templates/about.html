@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<div class="flex flex-col mx-auto  h-full justify-start items-center">
+    <div class="flex flex-col my-4 justify-center items-center">
+        <h1 class="text-9xl text-center  text-white select-none my-3 text-outline">About</h1>
+        {% for para in help_text_about_list %}
+            <p class="w-1/2 text-center text-2xl p-5 m-8 rounded-md  text-black bg-white bg-opacity-75  select-none text-justify">
+                 {{para}}
+            </p>
+        {% endfor %}
+        <p class="w-1/2 text-center text-2xl p-5 m-8 rounded-md  text-black bg-white bg-opacity-75 ">
+            {{contact_info}}
+       </p>
+    </div>
+    <a  href="javascript:close();" class="w-64  flex flex-col  items-center  px-4  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-purple-600 hover:text-white ease-linear transition-all  duration-150  mx-8  my-4 cursor-pointer">
+        back to home page
+    </a>
+</div>
+
+
+{% endblock %}

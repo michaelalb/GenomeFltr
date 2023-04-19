@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block body %}
+
+
+<form class="flex h-64 flex-col justify-center items-center" id="theForm" method="POST" enctype="multipart/form-data">
+<div id="mail_div"  class="flex flex-row justify-between items-center text-white">
+    <p class="text-2xl mx-8 select-none">Enter Pass Phrase:</p>
+    <input class="appearance-none border-2 border-blue-700 bg-white rounded-lg w-128 text-gray-700 text-xl mr-1 py-3 px-2 leading-tight focus:outline-none text-center" type="password" id="password" name="passphrase" required>
+    <button type="submit" name="button" id="button">
+        <span class="text-base font-bold text-2xl leading-normal select-none ">Send!</span>
+    </button>
+</div>
+</form>
+{% endblock %}

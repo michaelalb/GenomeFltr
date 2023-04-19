@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="flex flex-col mx-auto  h-full justify-center items-center">
+        <div class="flex-0 h-64 my-8 text-white text-outline" id="page_title" >
+            <h1 class="text-9xl text-center select-none my-5 ">Genomefltr</h1>
+            <h1 class="text-8xl select-none">Read Filtration Made Easy.</h1>
+        </div>
+        <div class="h-32 flex flex-col justify-end transition-all duration-500 ease-in-out" id="job_button">
+          <label
+            class="
+              w-64
+              flex flex-col
+              items-center
+              px-4
+              py-6
+              bg-white
+              rounded-md
+              shadow-md
+              tracking-wide
+              uppercase
+              border-2
+              border border-blue
+              cursor-pointer
+              hover:bg-purple-600 hover:text-white
+              text-purple-600
+              ease-linear
+              transition-all
+              duration-150
+              font-bold
+              mx-8
+              my-4
+          " onclick="buttonClick()">
+          <span class="mt-2 text-base leading-normal select-none animate-bounce ">Submit Job</span>
+        </div>
+        <div id="formdiv" class="relative bg-opacity-75 h-128 py-3 border-2 border-white-400 bg-white rounded-lg transition-opacity opacity-0 duration-500 ease-in-out hidden">
+          <form class="flex flex-col justify-center items-center mx-2" id="theForm" method="POST" enctype="multipart/form-data">
+            <div id="mail_div" class="flex flex-col">
+              <div   class="flex flex-row justify-between items-center">
+                <p class="text-2xl mx-8 select-none">Enter a valid email address:</p>
+                <input class="appearance-none border-2 border-blue-700 bg-white rounded-lg w-128 text-gray-700 text-xl mr-1 py-3 px-2 leading-tight focus:outline-none text-center" type="email" id="theMail" name="email" placeholder="example@example.com" required>
+  
+                <label for="theMail" id="continue_after_mail" class="w-16  flex flex-col items-center rounded-md py-3 bg-white shadow-lg tracking-wide uppercase border border-blue-700 bg-gray-600 text-white ease-linear transition-all duration-150 mx-8 my-4">
+                  <span class="text-base font-bold text-2xl leading-normal select-none ">➔</span>
+                </label>
+              </div>
+              <div   class="flex flex-row justify-between items-center">
+                <p class="text-2xl mx-8 select-none">Job name (optional):&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</p>
+                <input class="appearance-none border-2 border-blue-700 bg-white rounded-lg w-128 text-gray-700 text-xl mr-1 py-3 px-2 leading-tight focus:outline-none text-center" type="text" id="theJobName" name="job_name" maxlength="70" required>
+                <span class="w-16 py-3 my-4  mx-8 select-none">&nbsp</span>
+
+              </div>
+            </div>
+            <div id="file_div" class="hidden flex flex-col justify-center">
+                <div class="flex flex-row justify-between items-center ">
+                    <p class="text-2xl mx-8 select-none">Are your reads paired?&nbsp</p>
+                    <div>
+                        <input class="hidden peer" id="isNotPaired" type="radio" name="isPaired" value="isNotPaired" checked/>
+                        <label for="isNotPaired" class="w-64  text-center flex flex-row justify-center bg-white peer-checked:bg-green-600 peer-checked:text-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  hover:bg-cyan-600 hover:text-white font-bold  ease-linear  transition-all   mx-8  my-4 px-4  py-6  cursor-pointer">
+                            <span class="select-none">No</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input class="hidden peer" id="isPaired" type="radio" name="isPaired" value="isPaired"/>
+                        <label for="isPaired" class="w-64  text-center flex flex-row justify-center bg-white peer-checked:bg-green-600 peer-checked:text-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  hover:bg-cyan-600 hover:text-white font-bold  ease-linear  transition-all   mx-8  my-4 px-4  py-6  cursor-pointer">
+                            <span class="select-none">Yes</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-start items-center ">
+                  <p class="text-2xl mx-8 select-none">Select a valid reads file:</p>
+                  <label for="theFile" id="upload_button0" class="w-64  flex flex-col  items-center  px-4  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white  text-black hover:bg-green-600 hover:text-white  ease-linear  transition-all  duration-150  mx-8  my-4 cursor-pointer">
+                    <span class="select-none"><i id="file_icon0" class="fa fa-upload" style="font-size:24px"></i></span>
+                    <span id="file_name0" class="select-none text-white text-xs"></span>
+                    <input  class="hidden" id="theFile" type="file" name=file accept="{{extensions}}" required/>
+                    
+                  </label>
+                  </label>
+                  <label for="theFile2" id="upload_button1" class="w-64  flex flex-col  items-center  px-4  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white  text-black hover:bg-green-600 hover:text-white  ease-linear  transition-all  duration-150  mx-8  my-4 cursor-pointer">
+                    <span class="select-none"><i id="file_icon1" class="fa fa-upload" style="font-size:24px"></i></span>
+                    <span id="file_name1" class="select-none text-white text-xs"></span>
+                    <input  class="hidden" id="theFile2" type="file" name=file accept="{{extensions}}"/>
+                  </label>  
+                </div>
+              </div>
+            <div id="database_div" class="hidden flex flex-col justify-center items-center">
+              <div id="DB_options">
+                <!-- <label id="custom_button" class="w-64  flex flex-col  items-center  px-4 py-4  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  hover:bg-purple-600 hover:text-white  ease-linear  transition-all  duration-150  mx-8  my-4">
+                  <span class="select-none">Custom</span>
+                </label> -->
+                <fieldset id="db" class="grid grid-cols-5">
+                  {% for group, explanation in databases.items() %}
+                  <div class="select-none" title="{{explanation}}">
+                    <input class="hidden peer" id="{{group}}" type="radio" name=db value="{{group}}" checked/>
+                    <label  for="{{group}}" class="w-48 text-center flex flex-row justify-center bg-white peer-checked:bg-green-600 peer-checked:text-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  hover:bg-cyan-600 hover:text-white font-bold  ease-linear  transition-all   mx-2  my-2 px-3 py-3 cursor-pointer">
+                      <span class="select-none  text-sm">{{group}}</span>
+                    </label>
+                  </div>
+    
+                  {% endfor %}
+                  <label id="custom_button" class="w-48 text-center flex flex-row justify-center bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  hover:bg-orange-600 hover:text-white  ease-linear  transition-all font-bold  mx-2  my-2 px-3 py-3 cursor-pointer">
+                   <span class="select-none text-sm">Custom</span>
+                  </label>
+                </fieldset>
+              </div>
+              <div id="advance_custom_setting_div" class="hidden absolute bottom-0 right-0 mx-2 my-2 tracking-wide">
+                <!-- <p class="text-2xl mx-8 select-none">Advance Setting</p> -->
+                <input class="hidden peer" id="accession_num_checkbox" type="checkbox"/>
+                <label for="accession_num_checkbox" class="bg-white peer-checked:bg-green-600 peer-checked:text-white  hover:bg-cyan-600 hover:text-white font-bold  ease-linear  transition-all  cursor-pointer rounded-full cursor-pointer border-2 border-black h-10 w-10 flex flex-col  items-center justify-center">
+                <span><i class="fa fa-gear" style="font-size:24px"></i></span>
+                </label>
+              </div>
+              <label for="db" id="cont_summary_button" class="w-64  flex flex-col  items-center  px-4  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-green-600 hover:text-white ease-linear font-bold transition-all  duration-150  mx-8  my-4 cursor-pointer">
+                <span class="select-none">Next</span>
+              </label>
+            </div>
+            <div id="summary_div" class="hidden flex flex-col justify-center items-center">
+            <p class="text-2xl mx-16 select-none">Please verify the following input values.</p>
+            <p class="text-2xl mx-8 select-none">If the data inserted is wrong, please press the reset button</p>
+            <div class="flex flex-row justify-between items-center ">
+                <p class="w-48 text-2xl mx-2 select-none">Job name:</p>
+                <label class="w-80  text-center flex flex-row justify-center bg-gray-600 rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700 font-bold  ease-linear  transition-all   mx-8  my-2 px-4  py-3">
+                  <span id="user_job_name" class="select-none text-white"></span>
+                </label>
+            </div>
+  
+            <div class="flex flex-row justify-between items-center ">
+                <p class="w-48 text-2xl mx-2 select-none">Email adress:</p>
+                <label class="w-80  text-center flex flex-row justify-center bg-gray-600 rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700 font-bold  ease-linear  transition-all   mx-8  my-2 px-4  py-3">
+                  <span id="user_email_adress" class="select-none text-white"></span>
+                </label>
+            </div>
+            <div class="flex flex-row justify-between items-center ">
+                <p class="w-48 text-2xl mx-2 select-none">Paired files:</p>
+                <label class="w-80  text-center flex flex-row justify-center bg-gray-600 rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700 font-bold  ease-linear  transition-all   mx-8  my-2 px-4  py-3">
+                  <span id="user_is_paired" class="select-none text-white"></span>
+                </label>
+            </div>
+            <div class="flex flex-row justify-between items-center ">
+                <p class="w-48 text-2xl mx-2 select-none">File name 1:</p>
+                <label class="w-80  text-center flex flex-row justify-center bg-gray-600 rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700 font-bold  ease-linear  transition-all   mx-8  my-2 px-4  py-3">
+                  <span id="user_file0" class="select-none text-white"></span>
+                </label>
+            </div>
+            <div class="flex flex-row justify-between items-center ">
+                <p class="w-48 text-2xl mx-2 select-none">File name 2:</p>
+                <label class="w-80  text-center flex flex-row justify-center bg-gray-600 rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700 font-bold  ease-linear  transition-all   mx-8  my-2 px-4  py-3">
+                  <span id="user_file1" class="select-none text-white"></span>
+                </label>
+            </div>
+            <div class="flex flex-row justify-between items-center ">
+                <p class="w-48 text-2xl mx-2 select-none">Selected database:</p>
+                <label class="w-80  text-center flex flex-row justify-center bg-gray-600 rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700 font-bold  ease-linear  transition-all   mx-8  my-2 px-4  py-3">
+                  <span id="user_selected_db" class="select-none text-white"></span>
+                </label>
+            </div>
+            <div 
+                class="g-recaptcha" 
+                data-sitekey="6Ld7NqghAAAAAPYzTu5Hzd4MSiEYnPTmnftj7hZB"
+                data-callback="enablePostForm"
+            ></div>
+              <label id="submit_button" class="w-64  flex flex-col  items-center  px-4  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-green-600 hover:text-white ease-linear font-bold transition-all  duration-150  mx-8  my-4 cursor-pointer">
+                <span class="select-none">Submit</span></label>
+            </div>
+            
+          </form>
+          <label class="peer w-8 h-8 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 left-0 mx-2 my-2 tracking-wide ">
+            <span class="font-bold text-2xl text-gray-700 select-none" >?</span>
+          </label>
+          <div class="opacity-0 absolute bottom-5 left-6 w-11/12 h-auto bg-white border border-1 rounded-md bg-white peer-hover:opacity-100 transition-opacity ease-linear duration-150  p-5 pointer-events-none border-white shadow-lg">
+            <p id="help_text" class="p-2 text-1xl text-justify select-none w-auto h-auto">
+                "Placeholder text"
+            </p>
+          </div>
+          <label onclick="resetHome()" id="reset_button" class="absolute bottom--15 right-0 w-32  flex flex-col  items-center  px-4  py-3  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-red-700  bg-white-600 text-black hover:bg-red-600 hover:text-white ease-linear font-bold transition-all  duration-150  my-8 cursor-pointer">
+            <span class="select-none">Reset</span>
+          </label>
+        
+        </div>
+        <div id="after_post" class="hidden flex flex-row h-48 my-8 justify-end items-center">
+          <h1 id="progress-bar" class="text-center text-outline text-white animate-pulse text-4xl select-none"></h1>
+        </div>
+        <div class="flex flex-row justify-end items-center">
+          <a  href="/about" target="_blank" rel="noopener noreferrer" class="w-24  flex flex-col  items-center  px-4  py-3  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-purple-600 hover:text-white ease-linear  transition-all  duration-150  mx-2  my-3 cursor-pointer select-none">
+            About
+          </a>
+          <a  href="/overview" target="_blank" rel="noopener noreferrer" class="w-24  flex flex-col  items-center  px-4  py-3  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-purple-600 hover:text-white ease-linear  transition-all  duration-150  mx-2  my-3 cursor-pointer select-none">
+            Overview
+          </a>
+          <a  href="/example" target="_blank" rel="noopener noreferrer" class="w-24  flex flex-col  items-center  px-4  py-3  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-purple-600 hover:text-white ease-linear  transition-all  duration-150  mx-2  my-3 cursor-pointer select-none">
+            Example
+          </a>
+        </div>
+        <cite class="absolute bottom-0 left-0 text-black m-8 font-bold bg-white bg-opacity-75 p-5">
+            <p class="select-none text-sm">GenomeFLTR: Filtering Reads Made Easy</p>
+            <p class="text-sm">Dotan, E., Alburquerque, M., Wygoda, E.,<a href="https://www.tau.ac.il/~huchond/" target="_blank"> Huchon, D. </a>, <a href="https://www.tau.ac.il/~talp/" target="_blank"> Pupko, T.</a></p>
+        </cite>
+
+        <cite class="absolute bottom-0 right-0 text-black m-8 font-bold bg-white bg-opacity-75 p-5">
+            <p class="select-none text-sm">Background images generated using DALLE-2</p>
+        </cite>
+
+    </div>
+{% endblock %}
+  
+{% block scripts %}
+<script src="{{url_for('static',filename='js/consts.js')}}"></script>
+<script src="{{url_for('static',filename='js/home.js')}}"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+  initScript(parseInt("{{max_custom}}"), "{{species_prefix}}", "{{accession_prefix}}");
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body %}
+<meta http-equiv="Refresh" content="900">
+
+
+<div id="main_screen" 
+	 class="flex flex-col mx-auto  h-full justify-evenly items-center" 
+	 style="background-color: {{gif['background']|safe}};">
+
+	<h1 id="state_title" class="text-6xl text-center my-5 select-none" >{{text}}</h1>
+	
+	<div id="gif_div" class="w-1/3">
+		<iframe id="gif_iframe" src="https://giphy.com/embed/{{gif['gif_id']|safe}}" width="640" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/{{gif['gif_id']|safe}}">via GIPHY</a></p>
+	</div>
+	<!-- <img id="loading_gif" class="w-1/3" alt="loading page"/> -->
+
+	<h3 class="text-2xl text-center my-5 select-none w-2/3">{{message_to_user}}</h3>
+</div>
+
+<script>
+
+	document.getElementById("gif_iframe").src += ''; //makes sure to reload the gif.
+
+	const main_screen = document.getElementById("main_screen");
+	let corner_color = main_screen.style.backgroundColor.match(/\d+/g);
+
+	let brightness = 0.34 * corner_color[0] + 0.5 * corner_color[1] + 0.16 * corner_color[2];
+
+	if (brightness < 128) main_screen.style.color = "#FFFFFF";
+	else main_screen.style.color = "#000000";
+
+	//to listen for process updates
+	const process_id = '{{process_id}}';
+	
+	setInterval(() => {
+		var myRequest = new Request('/process_page_update/' + process_id);
+		
+		fetch(myRequest).then((response) => {
+			response.text().then((text) => {
+				if (text == '{{update_text}}') location.reload();
+			});
+		});
+
+	} ,parseInt('{{update_interval_sec}}')*1000)
+		
+
+	
+</script>
+
+{% endblock %}
+
+
+

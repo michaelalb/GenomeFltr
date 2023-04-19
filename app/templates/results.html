@@ -1,0 +1,32 @@
+{% extends 'base_result.html' %}
+
+{% block difference %}
+    <form class="my-2" id="export_btn" action="" onclick="confirm_export(event)" method=post>
+        <input type="hidden" id="k_mer_threshold" name="k_mer_threshold" value="">
+        <input type="hidden" id="species_list_filter" name="species_list" value="">
+        <label class="
+            w-64
+            px-2
+            py-4
+            text-center
+            bg-white
+            rounded-md
+            shadow-md
+            tracking-wide
+            border-2 border-white bg-green-100 cursor-pointer
+            hover:bg-green-600 hover:text-white
+            ease-linear
+            transition-all
+            duration-150">
+            <span class="text-base font-bold leading-normal select-none animate-bounce ">Get Filtered Reads</span>
+            <input type="submit" value="Export" hidden>
+        </label>
+    </form>
+{% endblock %}
+
+{%block diff_scripts%}
+    <script src="{{url_for('static',filename='js/results.js')}}"></script>
+    <script>
+        initResultsScript('{{ data|safe }}','{{ threshold_column_name|safe }}');
+    </script>
+{% endblock %}

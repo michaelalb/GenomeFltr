@@ -1,0 +1,30 @@
+{% extends 'base_result.html' %}
+
+{% block difference %} 
+    <div class="flex flex-row justify-end items-center">
+        <form id="download_example_btn" action="" method=post class="flex-1 flex flex-col justify-center items-center">
+            <input  type="submit" name="isDownload" value="Download example input file" class="w-96  flex flex-col  items-center  px-2  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-green-600 hover:text-white ease-linear font-bold transition-all  duration-150  mx-2  my-4 cursor-pointer">
+        </form>
+        <form class="my-2" id="export_btn" action="" onclick="confirm_export(event)" method=post>
+            <input type="hidden" id="k_mer_threshold" name="k_mer_threshold" value="">
+            <input type="hidden" id="species_list_filter" name="species_list" value="">
+            <label class="w-96  flex flex-col  text-center  px-2  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-orange-600 hover:text-white ease-linear font-bold transition-all  duration-150  mx-2  my-4 cursor-pointer">
+                <span class="w-96 text-base font-bold leading-normal select-none">Get Filtered Reads</span>
+                <input type="submit" value="Export" hidden>
+            </label>
+        </form>
+        <a  href="/about" target="_blank" rel="noopener noreferrer" class="w-32  flex flex-col  items-center  px-2  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-purple-600 hover:text-white ease-linear font-bold transition-all  duration-150  mx-2  my-4 cursor-pointer">
+            About
+        </a>
+        <a  href="/" target="_blank" rel="noopener noreferrer" class="w-32  flex flex-col  items-center  px-2  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-red-600 hover:text-white ease-linear font-bold transition-all  duration-150  mx-2  my-4 cursor-pointer">
+            Home
+        </a>
+    </div>
+{% endblock %}
+
+{%block diff_scripts%}
+    <script src="{{url_for('static',filename='js/example.js')}}"></script>
+    <script>
+        initResultsScript('{{ data|safe }}','{{ threshold_column_name|safe }}');
+    </script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+
+    <div class="flex flex-col mx-auto text-center  h-full justify-center items-center">
+        <div class="text-outline">
+            <h1 class="text-6xl text-white select-none">The server encountered an error 🙁</h1>
+            <h1 class="text-4xl text-white select-none">{{ error_text }}</h1>
+            <h1 class="text-4xl text-white ">{{ contact_info }}</h1>
+        </div>
+        <a  href="/" class="w-64  flex flex-col  items-center  px-4  py-6  bg-white  rounded-md  shadow-lg  tracking-wide  uppercase  border border-blue-700  bg-white-600 text-black hover:bg-purple-600 hover:text-white ease-linear transition-all  duration-150  mx-8  my-4 cursor-pointer select-none">
+        back to home page
+        </a>
+    
+    </div>
+{% endblock %}
+

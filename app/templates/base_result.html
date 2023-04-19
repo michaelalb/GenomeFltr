@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.1/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/danfojs@1.0.5/lib/bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+{% endblock%}
+
+{% block body %} 
+    <div class=" flex flex-col items-center justify-evenly h-full">
+        <div class="bg-white bg-opacity-75 flex flex-col items-center justify-evenly mx-4 my-2  px-4 py-2 border-2 rounded-md shadow-lg w-11/12">
+            <div class="flex w-full flex-row my-3">
+                {% for key, value in summary_stats.items() %}
+                <div class="relative flex-1 text-center mx-2 px-2 py-2 select-none border-2 shadow-lg rounded bg-white">
+                    <h1 class="text-2xl my-4">{{" ".join(key.split("_")).capitalize()}}</h1>
+                    <h1 class="text-lg">{{value[0]}}</h1>
+                    <label class="peer w-6 h-6 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 left-0 mx-2 my-2 tracking-wide ">
+                        <span class="font-bold text-1xl text-gray-700 select-none" >?</span>
+                    </label>
+                    <div class="opacity-0 absolute bottom-0 left-0 w-46 h-20 bg-teal-800 text-white rounded-md peer-hover:opacity-100 transition-opacity ease-linear duration-150 m-8 p-5 pointer-events-none border-black shadow-xl">
+                    <p id="help_text_{{key}}" class="p-3 text-lg text-justify select-none">{{value[1]}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div  class="flex w-full flex-row items-center my-3 justify-between"  style="height: 560px;">
+                <div class="w-5/12 relative border-2 flex flex-col h-full rounded mx-2 py-2 shadow-lg bg-white min-max-div-size-side" >
+                    <h1 class="text-center text-4xl select-none">Contaminated reads by threshold k-mer</h1>
+                    <canvas style="height: 360px; width: 480px" id="bar_chart" ></canvas>
+                    <label class="peer w-6 h-6 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 left-0 mx-2 my-2 tracking-wide ">
+                        <span class="font-bold text-1xl text-gray-700 select-none" >?</span>
+                    </label>
+                    <div class="opacity-0 absolute bottom-0 left-0 w-auto h-11/12 bg-teal-800 text-white rounded-md peer-hover:opacity-100 transition-opacity ease-linear duration-150 m-8 p-5 pointer-events-none border-black shadow-xl">
+                    <p id="help_text_bar_similarites" class="p-3 text-xl text-justify select-none">
+                    </p>
+                    </div>
+                    <a id="download_histogram" download="histogram_chart.jpg"  href="" class="peer w-6 h-6 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 right-0 mx-2 my-2 tracking-wide font-bold text-1xl text-gray-700 select-none">
+                        <img src="{{url_for('static',filename='images/down_arrow.svg')}}" width="70%" alt="*" title="Export image">
+                    </a>
+                </div>
+                <div class="w-4/12 relative flex-col h-full border-2 rounded mx-2 px-2 py-2 shadow-lg bg-white min-max-div-size-center">
+                    <h1 class="text-center text-4xl select-none">Species to be filtered</h1>
+                    <div id="species_container" class="flex flex-1 flex-col  mx-3 my-3 px-1 border-2" style="height: 480px;">
+                        <div class="flex flex-row align-center border-b-4 py-2 justify-between mx-3 static">
+                            <p class="font-bold self-center">Species</p>
+                            <div class="flex flex-row justify-center">
+                                <label id="select_button" class="
+                                w-26
+                                px-1
+                                mx-1
+                                text-center
+                                bg-white
+                                rounded-md
+                                shadow-md
+                                tracking-wide
+                                border-2 border-orange-600 bg-orange-100 cursor-pointer
+                                hover:bg-orange-600 hover:text-white
+                                ease-linear
+                                transition-all
+                                duration-150">
+                                <span class="text-base font-bold leading-normal text-sm select-none ">Select all</span></label>
+                                <label id="unselect_button" class="
+                                w-26
+                                px-1
+                                mx-1
+        
+                                text-center
+                                bg-white
+                                rounded-md
+                                shadow-md
+                                tracking-wide
+                                border-2 border-blue-600 bg-blue-100 cursor-pointer
+                                hover:bg-blue-600 hover:text-white
+                                ease-linear
+                                transition-all
+                                duration-150">
+                                <span class="text-base font-bold leading-normal text-sm select-none ">Unselect all</span></label>
+                            </div>
+                            <p class="font-bold self-center">Number of reads</p>
+                        </div>
+                        <div id="species_list" class="flex flex-col py-2 overflow-auto">
+                        </div>
+                    </div>
+                    <label class="peer w-6 h-6 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 left-0 mx-2 my-2 tracking-wide ">
+                        <span class="font-bold text-1xl text-gray-700 select-none" >?</span>
+                    </label>
+                    <div class="opacity-0 absolute bottom-0 left-0 w-auto h-11/12 bg-teal-800 text-white rounded-md peer-hover:opacity-100 transition-opacity ease-linear duration-150 m-8 p-5 pointer-events-none border-black shadow-xl">
+                    <p id="help_text_species_list" class="p-3 text-xl text-justify select-none">
+                    </p>
+                    </div>
+                </div>
+                <div class="w-3/12 relative border-2 flex flex-col h-full rounded mx-2 py-2 shadow-lg bg-white min-max-div-size-side" >
+                    <h1 class="text-center text-4xl select-none">Filtered reads percent</h1>
+                    <canvas style="height: 480px; width: 480px" id="pie_chart"> </canvas>
+                    <label class="peer w-6 h-6 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 left-0 mx-2 my-2 tracking-wide ">
+                        <span class="font-bold text-1xl text-gray-700 select-none" >?</span>
+                    </label>
+                    <div class="opacity-0 absolute bottom-0 left-0 w-auto h-11/12 bg-teal-800 text-white rounded-md peer-hover:opacity-100 transition-opacity ease-linear duration-150 m-8 p-5 pointer-events-none border-black shadow-xl">
+                    <p id="help_text_pie_chart" class="p-3 text-xl text-justify select-none">
+                    </p>
+                    </div>
+                    <a id="download_pie" download="pie_chart.jpg"  href="" class="peer w-6 h-6 bg-white border-2 border-black rounded-full cursor-pointer flex flex-col  items-center justify-center  absolute bottom-0 right-0 mx-2 my-2 tracking-wide font-bold text-1xl text-gray-700 select-none">
+                        <img src="{{url_for('static',filename='images/down_arrow.svg')}}" width="70%" alt="*" title="Export image">
+                    </a>
+                </div>
+            </div>
+            <div class="flex flex-row ">
+                <label id="download_matrix" class="
+                w-42
+                px-2
+                py-2
+                mx-1
+                text-center
+                bg-white
+                rounded-md
+                shadow-md
+                tracking-wide
+                border-2 border-green-600 bg-green-100 cursor-pointer
+                hover:bg-green-600 hover:text-white
+                ease-linear
+                transition-all
+                duration-150">
+                <span class=" text-base font-bold leading-normal text-sm select-none">Download matrix</span></label>
+                <div class="flex  flex-row rounded p-2 shadow-lg bg-white border-black border-2 select-none">
+                    <div class="flex flex-row mx-2">
+                        <label class="bg-amber-500 w-6 rounded-full mx-2 border-2 border-black"></label>
+                        <p class="font-bold">Reads that will be filtered</p>
+                    </div>
+                    <div class="flex flex-row mx-2">
+                        <label class="bg-blue-600 w-6 rounded-full mx-2  border-2 border-black"></label>
+                        <p class="font-bold">Reads that will be retained</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block difference %}{% endblock %}
+    </div>
+{% endblock %}
+
+{%block scripts%}
+    <script src="{{url_for('static',filename='js/consts.js')}}"></script>
+    <script src="{{url_for('static',filename='js/colors.js')}}"></script>
+    {% block diff_scripts %}{% endblock %}
+{% endblock %}
